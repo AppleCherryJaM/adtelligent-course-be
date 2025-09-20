@@ -1,7 +1,7 @@
 export const schema ={
     tags: ['feed'],
-        summary: 'Get feed data',
-        description: 'Get feed data',
+        summary: 'Feed data',
+        description: 'Feed data',
         response: {
         200: {
             type: 'object',

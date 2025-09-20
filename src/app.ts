@@ -2,7 +2,7 @@ import Fastify, {FastifyServerOptions} from "fastify";
 import {join} from "node:path";
 import AutoLoad from "@fastify/autoload";
 import configPlugin from "./config";
-import { getFeedDataRoutes } from "./modules/feedParser/routes/feedParser.route";
+import { feedDataRoutes } from "./routes";
 import userRoutes from "./modules/user/user.route";
 
 export type AppOptions = Partial<FastifyServerOptions>
@@ -30,11 +30,28 @@ async function buildApp(options: AppOptions = {}){
         throw error;
     }
 
+    try {
+        fastify.decorate("routeLoaded", (routeName: string) => {
+            fastify.log.info(`✅ Plugin loaded: ${routeName}`);
+        });
+
+        fastify.log.info("Starting to load routes");
+        await fastify.register(AutoLoad, {
+            dir: join(__dirname, "routes"),
+            options: options,
+        });
+
+        fastify.log.info("✅ Routes loaded successfully");
+    } catch (error) {
+        fastify.log.error("Error in autoload:", error);
+        throw error;
+    }
+
     fastify.get("/", async (request, reply) => {
         return {hello: "world"}
     })
 
-    fastify.register(getFeedDataRoutes)
+    fastify.register(feedDataRoutes)
     fastify.register(userRoutes, {prefix: 'api/users'});
 
     return fastify

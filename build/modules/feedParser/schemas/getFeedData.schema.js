@@ -3,8 +3,8 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.schema = void 0;
 exports.schema = {
     tags: ['feed'],
-    summary: 'Get feed data',
-    description: 'Get feed data',
+    summary: 'Feed data',
+    description: 'Feed data',
     response: {
         200: {
             type: 'object',

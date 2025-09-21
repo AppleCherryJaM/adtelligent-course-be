@@ -7,14 +7,12 @@ import getFeed from "../services/feedParser.service";
 
 async function feedDataRoutes(fastify: FastifyInstance) {
     const route = fastify.withTypeProvider<JsonSchemaToTsProvider>()
-    console.log("fastify: ", fastify);
-    const feed = await getFeed();
-    console.log("Feed: ", feed);
-    route.get('/feed', {
-      schema: schema,
-    }, async (request, reply) => {
-        reply.send({result: feed})
-    })
+    
+    fastify.get('/', async (request, reply) => {
+      const { url, force } = request.query as {url: string | undefined, force: boolean};
+      const result = await getFeed(url, force);
+      return result;
+    });
 }
 
 export default feedDataRoutes;

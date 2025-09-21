@@ -1,0 +1,19 @@
+# version: '3.8'
+
+services:
+  app:
+    build:
+      context: . # Собираем из текущей директории
+      dockerfile: Dockerfile
+    ports:
+      - "3000:3000" # Пробрасываем порт приложения на хост-машину
+    environment:
+      # Передаем переменные окружения из файла .env в контейнер
+      - PORT=${PORT}
+      - HOST=${HOST}
+      - DATABASE_URL=${DATABASE_URL}
+      - FEED_URL=${FEED_URL}
+    # 'restart: always' полезно для продакшена: контейнер перезапустится при падении
+    restart: always
+
+# Volumes и другой сервис БД НЕ НУЖНЫ, так как используем MongoDB Atlas

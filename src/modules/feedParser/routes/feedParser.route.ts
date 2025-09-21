@@ -1,5 +1,5 @@
-import {FastifyInstance} from "fastify";
-import {JsonSchemaToTsProvider} from "@fastify/type-provider-json-schema-to-ts";
+import type {FastifyInstance} from "fastify";
+import type {JsonSchemaToTsProvider} from "@fastify/type-provider-json-schema-to-ts";
 
 import {schema} from "../schemas/getFeedData.schema";
 import getFeed from "../services/feedParser.service";

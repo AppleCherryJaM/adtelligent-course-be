@@ -46,7 +46,7 @@ async function buildApp(options = {}) {
     fastify.get("/", async (request, reply) => {
         return { hello: "world" };
     });
-    fastify.register(routes_1.feedDataRoutes);
+    fastify.register(routes_1.feedDataRoutes, { prefix: "/api/feed" });
     fastify.register(user_route_1.default, { prefix: 'api/users' });
     return fastify;
 }

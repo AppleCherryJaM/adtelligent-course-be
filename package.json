@@ -4,11 +4,13 @@
   "description": "",
   "main": "index.js",
   "scripts": {
+    "generate" : "npx prisma generate",
     "lint": "biome check .",
     "format": "biome format --write .",
     "build": "tsc",
     "dev": "concurrently -k -p \"[{name}]\" -n \"TypeScript,App\" -c \"yellow.bold,cyan.bold\" \"tsc -w\" \"nodemon\""
   },
+  
   "author": "",
   "license": "ISC",
   "dependencies": {

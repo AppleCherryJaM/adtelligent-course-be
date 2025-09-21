@@ -51,7 +51,7 @@ async function buildApp(options: AppOptions = {}){
         return {hello: "world"}
     })
 
-    fastify.register(feedDataRoutes)
+    fastify.register(feedDataRoutes, {prefix: "/api/feed"})
     fastify.register(userRoutes, {prefix: 'api/users'});
 
     return fastify

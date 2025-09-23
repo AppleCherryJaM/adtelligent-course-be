@@ -1,9 +1,21 @@
-import { FastifyInstance } from "fastify";
+import { fastify, type FastifyInstance } from "fastify";
 
-import { createUser } from "./user.controller";
+import { registration } from "./user.controller";
+import UserSchema from "./user.schema";
+import type { JsonSchemaToTsProvider } from "@fastify/type-provider-json-schema-to-ts";
 
 async function userRoutes(server: FastifyInstance) {
-	server.post("/new", createUser);
+
+	// const route = fastify.withTypeProvider<JsonSchemaToTsProvider>();
+
+	server.post(
+  "/new",
+  {
+    schema: UserSchema
+  },
+  registration
+);
+
 }
 
 export default userRoutes;

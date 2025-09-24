@@ -1,6 +1,7 @@
 import Fastify, {FastifyServerOptions} from "fastify";
 import {join} from "node:path";
 import AutoLoad from "@fastify/autoload";
+
 import configPlugin from "./config";
 import { feedDataRoutes } from "./routes";
 import userRoutes from "./modules/user/user.route";
@@ -10,7 +11,7 @@ export type AppOptions = Partial<FastifyServerOptions>
 async function buildApp(options: AppOptions = {}){
 
   const fastify = Fastify({logger: true})
-    await  fastify.register(configPlugin)
+    await  fastify.register(configPlugin);
 
     try {
         fastify.decorate("pluginLoaded", (pluginName: string) => {

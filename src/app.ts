@@ -3,7 +3,7 @@ import {join} from "node:path";
 import AutoLoad from "@fastify/autoload";
 
 import configPlugin from "./config";
-import { feedDataRoutes } from "./routes";
+import { articleRoutes, feedDataRoutes } from "./routes";
 import userRoutes from "./modules/user/user.route";
 
 export type AppOptions = Partial<FastifyServerOptions>
@@ -48,12 +48,13 @@ async function buildApp(options: AppOptions = {}){
         throw error;
     }
 
+    fastify.register(feedDataRoutes, {prefix: "/api/feed"})
+    fastify.register(userRoutes, {prefix: '/api/user'});
+    fastify.register(articleRoutes, {prefix: '/api/article'});
+
     fastify.get("/", async (request, reply) => {
         return {hello: "world"}
     })
-
-    fastify.register(feedDataRoutes, {prefix: "/api/feed"})
-    fastify.register(userRoutes, {prefix: 'api/users'});
 
     return fastify
 }

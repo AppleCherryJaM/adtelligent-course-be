@@ -43,11 +43,12 @@ async function buildApp(options = {}) {
         fastify.log.error("Error in autoload:", error);
         throw error;
     }
+    fastify.register(routes_1.feedDataRoutes, { prefix: "/api/feed" });
+    fastify.register(user_route_1.default, { prefix: '/api/user' });
+    fastify.register(routes_1.articleRoutes, { prefix: '/api/article' });
     fastify.get("/", async (request, reply) => {
         return { hello: "world" };
     });
-    fastify.register(routes_1.feedDataRoutes, { prefix: "/api/feed" });
-    fastify.register(user_route_1.default, { prefix: 'api/users' });
     return fastify;
 }
 exports.default = buildApp;

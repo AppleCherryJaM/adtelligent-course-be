@@ -23,6 +23,6 @@ model User {
 model Feed {
   id        String   @id @default(auto()) @map("_id") @db.ObjectId
   url       String
-  data      Json
+  data      String
   createdAt DateTime @default(now())
 }

@@ -1,15 +1,63 @@
-export const schema ={
-    tags: ['feed'],
-        summary: 'Feed data',
-        description: 'Feed data',
-        response: {
-        200: {
-            type: 'object',
-                properties: {
-                hello: {
-                    type: 'string',
-                }
-            }
-        }
+const FeedItemSchema = {
+  type: 'object',
+  properties: {
+    title: { type: 'string' },
+    link: { type: 'string' },
+    pubDate: { type: 'string' },
+    content: { type: 'string' },
+    contentSnippet: { type: 'string' },
+    guid: { type: 'string' },
+    isoDate: { type: 'string', format: 'date-time' }
+  },
+  required: ['title', 'link', 'pubDate']
+} as const;
+
+const FeedResponseSchema = {
+  tags: ['feed'],
+  summary: "Get RSS Feed",
+  description: 'Fetch and parse RSS feed from provided URL',
+  querystring: {
+    type: 'object',
+    properties: {
+      url: { 
+        type: 'string',
+        format: 'uri',
+        description: 'RSS feed URL'
+      },
+      force: { 
+        type: 'boolean',
+        default: false,
+        description: 'Force refresh cache'
+      }
+    },
+  },
+  response: {
+    200: {
+      type: 'object',
+      properties: {
+        res: {
+          type: 'array',
+          items: FeedItemSchema
+        },
+        status: { type: 'number' }
+      },
+      required: ['res', 'status']
+    },
+    400: {
+      type: 'object',
+      properties: {
+        error: { type: 'string' },
+        message: { type: 'string' }
+      }
+    },
+    500: {
+      type: 'object',
+      properties: {
+        error: { type: 'string' },
+        message: { type: 'string' }
+      }
     }
-} as const
+  }
+} as const;
+
+export { FeedResponseSchema, FeedItemSchema };

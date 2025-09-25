@@ -13,7 +13,10 @@ async function createUser(input) {
             email, password
         }
     });
-    return user;
+    return {
+        id: user.id,
+        email: user.email
+    };
 }
 async function getUser(input) {
     const { email } = input;

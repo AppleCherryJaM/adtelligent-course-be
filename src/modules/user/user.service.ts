@@ -9,7 +9,10 @@ export async function createUser(input: UserInputSchema) {
 		}
 	});
 
-	return user;
+	return {
+		id: user.id,
+		email: user.email
+	};
 }
 
 export async function getUser(input: UserInputSchema) {

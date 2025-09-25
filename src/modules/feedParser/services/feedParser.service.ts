@@ -1,30 +1,49 @@
-import Parser from "rss-parser";
-
-import type { feedParserResult } from "../types/feedParserResult.type";
-import prisma from "../../../utils/prisma";
+import Parser from 'rss-parser';
+import type { FeedItem, FeedResponse} from '../types/feedParser.type';
+import prisma from '../../../utils/prisma';
 
 const parser = new Parser();
-const defaultUrl = process.env.FEED_URL || "https://feeds.bbci.co.uk/news/rss.xml";
 
-async function getFeed(feedUrl?: string, force?: boolean) {
-	const url = feedUrl || defaultUrl;
-
-	let result: feedParserResult;
+async function getFeed(url: string, force = false): Promise<FeedResponse | null> {
+  
 	try {
 		if (!force) {
 			const cached = await prisma.feed.findFirst({where: {url}})
     	if (cached) { 
-				console.log("Cached: ", cached)
-				return cached.data
+				const parsedData: FeedItem[] = JSON.parse(cached.data);
+          return {
+            res: parsedData,
+            status: 200
+          };
 			}
 		}
-		const feed = await parser.parseURL(url);
-		result = {res: JSON.stringify(feed.items), status: 200};
 	} catch (error) {
-		console.log(error);
-		result = {res: error, status: 500}
+		console.error(error);
 	}
-	return result
+
+	try {
+    const feed = await parser.parseURL(url);
+    console.log(`Feed ${feed}`);
+
+    const items: FeedItem[] = feed.items.map(item => ({
+      title: item.title || '',
+      link: item.link || '',
+      pubDate: item.pubDate || '',
+      content: item.content || '',
+      contentSnippet: item.contentSnippet || '',
+      guid: item.guid || '',
+      isoDate: item.isoDate || ''
+    }));
+    
+    return {
+      res: items,
+      status: 200
+    };
+    
+  } catch (error) {
+    console.error('Error parsing RSS feed:', error);
+    return null;
+  }
 }
 
 export default getFeed;

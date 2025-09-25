@@ -6,25 +6,42 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const rss_parser_1 = __importDefault(require("rss-parser"));
 const prisma_1 = __importDefault(require("../../../utils/prisma"));
 const parser = new rss_parser_1.default();
-const defaultUrl = process.env.FEED_URL || "https://feeds.bbci.co.uk/news/rss.xml";
-async function getFeed(feedUrl, force) {
-    const url = feedUrl || defaultUrl;
-    let result;
+async function getFeed(url, force = false) {
     try {
         if (!force) {
             const cached = await prisma_1.default.feed.findFirst({ where: { url } });
             if (cached) {
-                console.log("Cached: ", cached);
-                return cached.data;
+                const parsedData = JSON.parse(cached.data);
+                return {
+                    res: parsedData,
+                    status: 200
+                };
             }
         }
-        const feed = await parser.parseURL(url);
-        result = { res: JSON.stringify(feed.items), status: 200 };
     }
     catch (error) {
-        console.log(error);
-        result = { res: error, status: 500 };
+        console.error(error);
     }
-    return result;
+    try {
+        const feed = await parser.parseURL(url);
+        console.log(`Feed ${feed}`);
+        const items = feed.items.map(item => ({
+            title: item.title || '',
+            link: item.link || '',
+            pubDate: item.pubDate || '',
+            content: item.content || '',
+            contentSnippet: item.contentSnippet || '',
+            guid: item.guid || '',
+            isoDate: item.isoDate || ''
+        }));
+        return {
+            res: items,
+            status: 200
+        };
+    }
+    catch (error) {
+        console.error('Error parsing RSS feed:', error);
+        return null;
+    }
 }
 exports.default = getFeed;

@@ -1,59 +1,48 @@
-
-
+// schemas/user.schema.ts
 const RegistrationSchema = {
-	tags: ['user'],
-	summary: "Create User Schema",
-	description: 'Create User Schema',
-	body: {
-		type: 'object',
-		properties: {
-			email: { type: 'string', minLength: 7},
-			password: { type: 'string', minLength: 5},
-		},
-		required: ['email', 'password']
-	},
-	response: {
-		200: {
-			type: 'object',
-			properties: {
-				email: { type: 'string'},
-				password: { type: 'string'},
-			},
-			required: ['email', 'password']
-		}
-	}
-} as const;
-
-const LoginSchema = {
   tags: ['user'],
-  summary: "Login User Schema",
-  description: 'Authenticate user with email and password',
-  querystring: {
+  summary: "Register new user",
+  description: "Create a new user account with JWT token",
+  body: {
     type: 'object',
+    required: ['email', 'password'],
     properties: {
-      email: { type: 'string', minLength: 7 },
-      password: { type: 'string', minLength: 5 },
-    },
-    required: ['email', 'password']
+      email: { 
+        type: 'string', 
+        format: 'email',
+        minLength: 7
+      },
+      password: { 
+        type: 'string', 
+        minLength: 5
+      },
+    }
   },
   response: {
-    200: {
+    201: {
+      description: 'Successful registration',
       type: 'object',
       properties: {
-        id: { type: 'string' },
-        email: { type: 'string' },
-        message: { type: 'string' }
-      },
-      required: ['id', 'email', 'message']
+        user: {
+          type: 'object',
+          properties: {
+            id: { type: 'string' },
+            email: { type: 'string' }
+          }
+        },
+        token: { type: 'string' }
+      }
     },
-    401: {
+    400: {
+      description: 'Validation error',
       type: 'object',
       properties: {
         error: { type: 'string' },
         message: { type: 'string' }
       }
     },
-    404: {
+    500: {
+      description: 'Server error',
       type: 'object',
       properties: {
         error: { type: 'string' },
@@ -63,4 +52,58 @@ const LoginSchema = {
   }
 } as const;
 
-export {RegistrationSchema, LoginSchema};
+const LoginSchema = {
+  tags: ['user'],
+  summary: "Login user",
+  description: "Authenticate user and return JWT token",
+  body: {  
+    type: 'object',
+    required: ['email', 'password'],
+    properties: {
+      email: { 
+        type: 'string', 
+        format: 'email',
+        minLength: 7
+      },
+      password: { 
+        type: 'string', 
+        minLength: 5
+      },
+    }
+  },
+  response: {
+    200: {
+      description: 'Successful login',
+      type: 'object',
+      properties: {
+        user: {
+          type: 'object',
+          properties: {
+            id: { type: 'string' },
+            email: { type: 'string' }
+          }
+        },
+        token: { type: 'string' },
+        message: { type: 'string' }
+      }
+    },
+    401: {
+      description: 'Authentication failed',
+      type: 'object',
+      properties: {
+        error: { type: 'string' },
+        message: { type: 'string' }
+      }
+    },
+    404: {
+      description: 'User not found',
+      type: 'object',
+      properties: {
+        error: { type: 'string' },
+        message: { type: 'string' }
+      }
+    }
+  }
+} as const;
+
+export { RegistrationSchema, LoginSchema };

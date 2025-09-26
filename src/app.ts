@@ -4,7 +4,8 @@ import AutoLoad from "@fastify/autoload";
 
 import configPlugin from "./config";
 import { articleRoutes, feedDataRoutes, userRoutes } from "./routes";
-import swaggerPlugin from "./plugins/swagger"; // ← ДОБАВЬ ЭТОТ ИМПОРТ
+import swaggerPlugin from "./plugins/swagger";
+import jwtPlugin from './plugins/jwt';
 
 export type AppOptions = Partial<FastifyServerOptions>
 
@@ -22,7 +23,7 @@ async function buildApp(options: AppOptions = {}){
         }
     });
     await fastify.register(configPlugin);
-
+    await fastify.register(jwtPlugin);
     await fastify.register(swaggerPlugin);
 
     try {

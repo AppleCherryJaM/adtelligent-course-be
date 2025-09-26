@@ -5,7 +5,6 @@ import prisma from '../../../utils/prisma';
 const parser = new Parser();
 
 async function getFeed(url: string, force = false): Promise<FeedResponse | null> {
-  
 	try {
 		if (!force) {
 			const cached = await prisma.feed.findFirst({where: {url}})
@@ -34,7 +33,7 @@ async function getFeed(url: string, force = false): Promise<FeedResponse | null>
       guid: item.guid || '',
       isoDate: item.isoDate || ''
     }));
-    
+
     return {
       res: items,
       status: 200

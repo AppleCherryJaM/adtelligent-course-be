@@ -14,7 +14,7 @@ async function userRoutes(server: FastifyInstance) {
   registration
 );
 
-	server.get(
+	server.post(
     "/",
     {
       schema: LoginSchema
@@ -22,6 +22,14 @@ async function userRoutes(server: FastifyInstance) {
     login
   );
 
+  server.get("/profile", {
+    onRequest: [server.authenticate],
+  }, async (request, reply) => {
+    return { 
+      user: request.user,
+      timestamp: new Date().toISOString()
+    };
+  });
 }
 
 export default userRoutes;

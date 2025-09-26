@@ -8,7 +8,8 @@ const node_path_1 = require("node:path");
 const autoload_1 = __importDefault(require("@fastify/autoload"));
 const config_1 = __importDefault(require("./config"));
 const routes_1 = require("./routes");
-const swagger_1 = __importDefault(require("./plugins/swagger")); // ← ДОБАВЬ ЭТОТ ИМПОРТ
+const swagger_1 = __importDefault(require("./plugins/swagger"));
+const jwt_1 = __importDefault(require("./plugins/jwt"));
 async function buildApp(options = {}) {
     const fastify = (0, fastify_1.default)({
         logger: true,
@@ -22,6 +23,7 @@ async function buildApp(options = {}) {
         }
     });
     await fastify.register(config_1.default);
+    await fastify.register(jwt_1.default);
     await fastify.register(swagger_1.default);
     try {
         fastify.decorate("pluginLoaded", (pluginName) => {

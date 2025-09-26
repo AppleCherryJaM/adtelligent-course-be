@@ -1,25 +1,20 @@
 # Используем официальный образ Node.js на Alpine (маленький и безопасный)
 FROM node:20-alpine AS base
+RUN apk add --no-cache openssl
 
-# Стадия сборки (builder)
 FROM base AS builder
 WORKDIR /app
 
-# Копируем файлы, необходимые для установки зависимостей
+
 COPY package.json package-lock.json* ./
-# Отдельно копируем Prisma schema, так как он нужен для генерации клиента
 COPY prisma ./prisma
 
-# Устанавливаем все зависимости (включая devDependencies) для сборки
 RUN npm ci
 
-# Генерируем Prisma Client
 RUN npx prisma generate
 
-# Копируем весь исходный код
 COPY . .
 
-# Собираем проект (компилируем TypeScript в JS) -> теперь в ./build
 RUN npm run build
 
 # Стадия финального образа (production)

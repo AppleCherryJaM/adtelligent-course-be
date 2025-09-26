@@ -14,7 +14,7 @@ async function userRoutes(server: FastifyInstance) {
   registration
 );
 
-	server.get(
+	server.post(
     "/",
     {
       schema: LoginSchema

@@ -33,7 +33,7 @@ async function registration(request, reply) {
     }
 }
 async function login(request, reply) {
-    const { email, password } = request.query;
+    const { email, password } = request.body;
     try {
         const user = await (0, user_service_1.getUser)({ email, password });
         if (!user) {

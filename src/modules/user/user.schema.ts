@@ -56,7 +56,7 @@ const LoginSchema = {
   tags: ['user'],
   summary: "Login user",
   description: "Authenticate user and return JWT token",
-  querystring: {  
+  body: {  
     type: 'object',
     required: ['email', 'password'],
     properties: {

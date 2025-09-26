@@ -39,9 +39,9 @@ async function registration(request: FastifyRequest<{
 }
 
 async function login(request: FastifyRequest<{
-  Querystring: UserInputSchema
+  Body: UserInputSchema
 }>, reply: FastifyReply) {
-  const { email, password } = request.query;
+  const { email, password } = request.body;
 
   try {
     const user = await getUser({ email, password });
